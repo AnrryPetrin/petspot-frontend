@@ -7,7 +7,7 @@ async function fetchData() {
     return;
   }
 
-  const apiUrl = `https://petspot-api.azurewebsites.net/petspot/pet-register/${ownerId}`;
+  const apiUrl = `https://petspot-api.azurewebsites.net/petspot/pet-register/182e8876-5d64-4e5a-bdaf-e5d167be8743`;
 
   try {
     const response = await fetch(apiUrl, {
