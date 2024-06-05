@@ -16,11 +16,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const termosCheck = document.getElementById("termos-check").checked;
 
     if (!termosCheck) {
-      alert("Você deve concordar com os Termos de Uso.");
+      displayMessage("Você deve concordar com os Termos de Uso.", "danger");
       return;
     }
 
-    const [year, month, day] = dataDeNascimento.split('-');
+    if (!nome || !sobrenome || !email || !senha || !repetirSenha || !usuario || !dataDeNascimento || !pais || !telefone) {
+      displayMessage("Preencha todos os campos.", "danger");
+      return;
+    }
+
+    if (senha !== repetirSenha) {
+      displayMessage("As senhas não coincidem.", "danger");
+      return;
+    }
+
+    const [year, month, day] = dataDeNascimento.split("-");
     const formattedDate = `${day}/${month}/${year}`;
 
     const body = {
@@ -30,14 +40,15 @@ document.addEventListener("DOMContentLoaded", function () {
       senha,
       repetirSenha,
       usuario,
-      dataDeNascimento:formattedDate,
+      dataDeNascimento: formattedDate,
       pais,
       telefone,
       newsletterCheck,
     };
 
-    
-      const response = await fetch("https://petspot-api.azurewebsites.net/petspot/register", {
+    try {
+      const response = await fetch("http://localhost:8080/petspot/register", {
+
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,13 +57,28 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       const data = await response.json();
-      if (response.ok) {
-        alert("Cadastro realizado com sucesso!");
-        window.location.href = "user-login.html";
+
+      if (!response.ok) {
+        //alert(data.hasError ? data.message : 'Ocorreu um erro desconhecido.');
+        displayMessage(data.hasError ? data.message : 'Ocorreu um erro desconhecido.', "danger");
+
       } else {
-     
-        alert(`Erro: ${data.message}`);
+        window.location.href = "user-login.html";
       }
-   
+    } catch (error) {
+      console.error("Error:", error);
+      alert(`Ocorreu um erro: ${error.message}`);
+    }
   });
+
+  const responseMessages = document.getElementById("response-messages");
+
+  function displayMessage(message, type) {
+    responseMessages.innerHTML = "";
+    const messageElement = document.createElement("div");
+    messageElement.className = `alert alert-${type}`;
+    messageElement.role = "alert";
+    messageElement.textContent = message;
+    responseMessages.appendChild(messageElement);
+  }
 });

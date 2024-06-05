@@ -1,38 +1,61 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const form = document.querySelector("form");
-  const emailInput = document.getElementById("email");
-  const senhaInput = document.getElementById("senha");
-
+  const form = document.getElementById("login-form");
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const loginData = {
-      email: emailInput.value,
-      senha: senhaInput.value,
-    };
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
 
+    const body = { email, senha };
+    
+    // Chamando a função loginUser e utilizando Try catch para verificar erros.
     try {
-      const response = await fetch("https://petspot-api.azurewebsites.net/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(loginData),
-      });
-
-      if (response.ok) {
-        const ownerId = await response.text();
-        localStorage.setItem("ownerId", ownerId);
-        alert(`Seja bem vindo tutor!`);
-        // Redirecionar para a página principal ou dashboard
-        window.location.href = "pet-register.html";
-      } else {
-        const errorMessage = await response.text();
-        alert(`Erro: ${errorMessage}`);
-      }
+      const data = await loginUser(body);
+      localStorage.setItem("ownerId", data.ownerId)
+      window.location.href = "pet-list.html";
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
-      alert("Erro ao fazer login. Verifique os dados e tente novamente.");
+      displayMessage(error.message, "danger");
     }
   });
+
+  const responseMessages = document.getElementById("response-messages");
+
+  function displayMessage(message, type) {
+    responseMessages.innerHTML = "";
+    // Cria um elemento div para a mensagem
+    const messageElement = document.createElement("div");
+    messageElement.className = `alert alert-${type}`; // Adiciona a classe Bootstrap para estilização
+    messageElement.role = "alert"; // Define o papel do elemento como alerta
+    messageElement.textContent = message; // Define o texto da mensagem
+    // Adiciona o elemento de mensagem ao contêiner de mensagens
+    responseMessages.appendChild(messageElement);
+  }
+
+  async function loginUser(body) {
+    const response = await fetch("http://localhost:8080/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    let data;
+    try {
+      data = await response.json();
+    } catch (error) {
+      throw new Error("A resposta do servidor não está em formato JSON.");
+    }
+
+    if (!response.ok) {
+      if (data.error) {
+        throw new Error(data.error);
+      } else {
+        throw new Error("Ocorreu um erro desconhecido.");
+      }
+    }
+
+    return data;
+  }
+
 });

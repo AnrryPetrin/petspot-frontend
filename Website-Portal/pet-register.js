@@ -1,66 +1,75 @@
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector("form");
-  const nomeInput = document.getElementById("nome");
-  const dataNascimentoInput = document.getElementById("data-nascimento");
-  const generoInput = document.getElementById("genero");
-  const comportamentoInput = document.getElementById("comportamento");
-  const especieInput = document.getElementById("especie");
-  const pesoInput = document.getElementById("peso");
-  const racaInput = document.getElementById("raca");
-  const porteInput = document.getElementById("porte");
-  const castradoSimInput = document.getElementById("castrado-sim");
-  const vacinasSimInput = document.getElementById("vacinas-sim");
-
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const ownerId = localStorage.getItem("ownerId");
-    if (!ownerId) {
-      alert("Você não está autenticado. Por favor, faça login.");
-      window.location.href = "user-login.html";
+    const nome = document.getElementById("nome").value;
+    const dataNascimento = document.getElementById("data-nascimento").value;
+    const genero = document.getElementById("genero").value === "Macho" ? 1 : 0;
+    const especie = document.getElementById("especie").value;
+    const raca = document.getElementById("raca").value;
+    const peso = document.getElementById("peso").value;
+    const comportamento = document.getElementById("comportamento").value;
+    const porte = document.getElementById("porte").value;
+    const castrado = document.querySelector('input[name="castrado"]:checked').value === "sim";
+    const vacinado = document.querySelector('input[name="vacinas"]:checked').value === "sim";
+
+    if (!nome || !dataNascimento || !especie || !raca || !comportamento || !porte) {
+      displayMessage("Preencha todos os campos obrigatórios.", "danger");
       return;
     }
 
-    const petData = {
-      nome: nomeInput.value,
-      especie: especieInput.value, 
-      genero: generoInput.value === "macho" ? 1 : 2, 
-      raca: racaInput.value,
-      peso: pesoInput.value, // ou outro valor se necessário
-      castrado: castradoSimInput.checked,
-      comportamento: comportamentoInput.value,
-      porte: porteInput.value,
-      vacinado: vacinasSimInput.checked,
-      dataDeNascimento: formatDate(dataNascimentoInput.value),
+    const [year, month, day] = dataNascimento.split("-");
+    const formattedDate = `${day}/${month}/${year}`;
+
+    const body = {
+      nome,
+      dataDeNascimento: formattedDate,
+      genero,
+      especie,
+      raca,
+      peso,
+      comportamento,
+      porte,
+      castrado,
+      vacinado
     };
 
     try {
-      const response = await fetch(`https://petspot-api.azurewebsites.net/petspot/pet-register/${ownerId}`, {
+      const ownerId = localStorage.getItem("ownerId");
+      const response = await fetch(`http://localhost:8080/petspot/pet-register/${ownerId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(petData),
+        body: JSON.stringify(body),
       });
 
-      if (response.ok) {
-        const savedPet = await response.json();
-        localStorage.setItem("petID", savedPet.id);
-        alert(`Pet cadastrado com sucesso!`);
-        // Redirecionar para outra página ou limpar o formulário
-        window.location.href = "pet-list.html";
+      const data = await response.json();
+
+      if (!response.ok) {
+        displayMessage(data.hasError ? data.message : 'Ocorreu um erro desconhecido.', "danger");
       } else {
-        const errorMessage = await response.text();
-        alert(`Erro: ${errorMessage}`);
+        displayMessage("Pet cadastrado com sucesso!", "success");
+        setTimeout(() => {
+          window.location.href = "pet-list.html";
+        }, 2000);
       }
     } catch (error) {
-      console.error("Erro ao cadastrar o pet:", error);
-      alert("Erro ao cadastrar o pet. Tente novamente mais tarde.");
+      console.error("Erro ao cadastrar pet:", error);
+      displayMessage(`Ocorreu um erro: ${error.message}`, "danger");
     }
   });
 
-  function formatDate(dateString) {
-    const [year, month, day] = dateString.split("-");
-    return `${day}/${month}/${year}`;
+  const responseMessages = document.getElementById("response-messages");
+
+  function displayMessage(message, type) {
+    responseMessages.innerHTML = "";
+    const messageElement = document.createElement("div");
+    messageElement.className = `alert alert-${type}`;
+    messageElement.role = "alert";
+    messageElement.textContent = message;
+    responseMessages.appendChild(messageElement);
+
   }
 });
