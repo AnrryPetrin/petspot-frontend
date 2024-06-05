@@ -204,22 +204,10 @@ function createCards(data) {
         );
         editModal.show();
       });
-
-      const modalCloseButton2 = document.createElement("button");
-      modalCloseButton2.setAttribute("type", "button");
-      modalCloseButton2.classList.add("btn", "btn-primary");
-      modalCloseButton2.setAttribute("data-bs-dismiss", "modal");
-      modalCloseButton2.textContent = "Fechar";
-
-      modalFooter.appendChild(modalEditButton);
-      modalFooter.appendChild(modalCloseButton2);
-      modalContent.appendChild(modalFooter);
-
-      modalDialog.appendChild(modalContent);
-      modal.appendChild(modalDialog);
-
-      container.appendChild(cardColumn);
-      container.appendChild(modal);
+    })
+    .catch(error => {
+      console.error("Erro ao buscar os pets:", error);
+      alert("Erro ao buscar os pets. Tente novamente mais tarde.");
     });
   } 
 }
@@ -244,3 +232,4 @@ function displayMessage(message, type) {
 }
 
 window.onload = fetchData;
+

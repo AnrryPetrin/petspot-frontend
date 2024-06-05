@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
       const response = await fetch("http://localhost:8080/petspot/register", {
+
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!response.ok) {
         //alert(data.hasError ? data.message : 'Ocorreu um erro desconhecido.');
         displayMessage(data.hasError ? data.message : 'Ocorreu um erro desconhecido.', "danger");
+
       } else {
         window.location.href = "user-login.html";
       }

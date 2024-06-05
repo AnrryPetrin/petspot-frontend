@@ -70,5 +70,6 @@ document.addEventListener("DOMContentLoaded", function () {
     messageElement.role = "alert";
     messageElement.textContent = message;
     responseMessages.appendChild(messageElement);
+
   }
 });
