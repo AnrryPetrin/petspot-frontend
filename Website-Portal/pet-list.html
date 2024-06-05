@@ -23,7 +23,7 @@
   <body>
     <header>
       <!-- Início da seção da navbar -->
-      <nav class="navbar navbar-expand-lg bg-body-tertiary mb-5">
+      <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
           <a class="navbar-brand" href="pet-list.html">
             <img
@@ -44,7 +44,17 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="our-services.html">Nossos Serviços</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="pet-care.html">Pet Care</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="about-us.html">Sobre Nós</a>
+              </li>
+            </ul>
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item d-flex">
                 <a
@@ -54,8 +64,8 @@
                   role="button"
                   aria-controls="offCanvasMinhaConta"
                 >
-                  <ion-icon name="person-circle"></ion-icon>
-                  <span class="nav-icon-span mx-2">Conecte-se</span>
+                  <ion-icon name="person-circle-outline"></ion-icon>
+                  <span class="nav-icon-span mx-2">Minha conta</span>
                 </a>
               </li>
             </ul>
@@ -70,7 +80,7 @@
       >
         <div class="offcanvas-header">
           <h4 class="offcanvas-title" id="offCanvasMinhaContaLabel">
-            Bem vindo(a) ao PetSpot!
+            Bem vindo(a) de volta!
           </h4>
           <button
             type="button"
@@ -82,13 +92,66 @@
         <div class="offcanvas-body">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Entre na sua conta PetSpot</h5>
+              <h5 class="card-title">Gerencie seu perfil PetSpot</h5>
               <h6 class="card-subtitle mb-2 text-body-secondary">
-                Acesse o painel administrativo da sua conta PetSpot, e gerencie
-                seus Pets.
+                Altere suas preferências, ou modifique suas informações
+                pessoais.
               </h6>
-              <a href="user-login.html" class="btn btn-outline-primary">
-                Conectar-se
+              <a
+                id="manage-profile"
+                class="btn btn-outline-primary"
+                href="user-profile.html"
+              >
+                Gerenciar perfil
+              </a>
+            </div>
+          </div>
+          <br />
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Gerencie seus Pets</h5>
+              <h6 class="card-subtitle mb-2 text-body-secondary">
+                Adicione ou remova seus pets da sua família, ou altere
+                informações pessoais e preferências do seu pet.
+              </h6>
+              <a
+                id="manage-pets"
+                class="btn btn-outline-primary"
+                href="pet-list.html"
+              >
+                Gerenciar Pets
+              </a>
+            </div>
+          </div>
+          <br />
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Adicione um Pet</h5>
+              <h6 class="card-subtitle mb-2 text-body-secondary">
+                Cadastre um pet à sua família Petspot.
+              </h6>
+              <a
+                id="add-pet"
+                class="btn btn-outline-primary"
+                href="pet-register.html"
+              >
+                Adicionar Pets
+              </a>
+            </div>
+          </div>
+          <br />
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Sair da sua conta</h5>
+              <h6 class="card-subtitle mb-2 text-body-secondary">
+                Saia da sua conta PetSpot, conecte-se em outra conta, ou crie outra conta.
+              </h6>
+              <a
+                id="add-pet"
+                class="btn btn-outline-primary"
+                href="user-login.html"
+              >
+                Desconectar
               </a>
             </div>
           </div>
