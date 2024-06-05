@@ -7,7 +7,7 @@ async function fetchData() {
     return;
   }
 
-  const apiUrl = `http://localhost:8080/petspot/meuspets/${ownerId}`;
+  const apiUrl = `https://petspot-api.azurewebsites.net/petspot/meuspets/${ownerId}`;
 
   try {
     const response = await fetch(apiUrl, {
